@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/auth/login/Login";
+import RegistrationForm from "./pages/auth/signup/RegistrationForm";
+import SignUp from "./pages/auth/signup/SignUp";
+import AcceptedCompanies from "./pages/state-coordinator/AcceptedCompanies";
+import RegisteredCompanies from "./pages/state-coordinator/RegisteredCompanies";
+
+import store from "./store";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import { Provider } from "react-redux";
+import Homepage from "./pages/state-coordinator/Homepage";
+import Dashboard from "./pages/Dashboard";
+
+let persistor = persistStore(store);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistor}>
+				<div className="">
+					<BrowserRouter>
+						<Routes>
+							<Route  path = "/" element = {<Dashboard/>}/>
+							<Route path="/register" element={<SignUp />} />
+							<Route path="/login" element={<Login />} />
+							<Route
+								path="/registration-form"
+								element={<RegistrationForm />}
+							/>
+							<Route path="/state-coordinator">
+								<Route
+									path="home"
+									element={<Homepage />}
+								/>
+								<Route
+									path="registered-companies"
+									element={<RegisteredCompanies />}
+								/>
+								<Route
+									path="accepted-companies"
+									element={<AcceptedCompanies />}
+								/>
+							</Route>
+						</Routes>
+					</BrowserRouter>
+				</div>
+			</PersistGate>
+		</Provider>
+	);
 }
 
 export default App;
