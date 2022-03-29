@@ -10,7 +10,7 @@ import ConfirmationAlert from "./components/ConfirmationAlert";
 import ConfirmationErrorModal from "./components/ConfirmationErrorModal";
 
 const AcceptedCompanies = () => {
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const [selectedLga, setSelectedLga] = useState("");
 	const [logisticCompanies, setLogisticCompanies] = useState([]);
 	const [clusterManagers, setClusterManagers] = useState([]);
@@ -104,13 +104,14 @@ const AcceptedCompanies = () => {
 		message: "",
 	});
 
-	const onSelectClusterManagerPriority = async (name , value) => {
+	const onSelectClusterManagerPriority = async (name, value) => {
 		const payload = {
-			clusterManagerId : name,
-			priority : value
-		}
+			clusterManagerId: name,
+			priority: value,
+		};
 
-		const response = await stateCoordinatorSevice.changeClusterManagerPriority(payload)
+		const response =
+			await stateCoordinatorSevice.changeClusterManagerPriority(payload);
 
 		getCompanies(user?.state);
 		//show custom modal
@@ -118,16 +119,19 @@ const AcceptedCompanies = () => {
 		setCustomModalDetails({
 			success: response.success,
 			message: response.message,
-		});		
-	}
+		});
+	};
 
-	const onSelectLogisticsCompanyPriority = async (name , value) => {
+	const onSelectLogisticsCompanyPriority = async (name, value) => {
 		const payload = {
-			logisticCompanyId : name,
-			priority : value
-		}
+			logisticCompanyId: name,
+			priority: value,
+		};
 
-		const response = await stateCoordinatorSevice.changeLogisticsCompanyPriority(payload)
+		const response =
+			await stateCoordinatorSevice.changeLogisticsCompanyPriority(
+				payload
+			);
 
 		getCompanies(user?.state);
 		//show custom modal
@@ -135,15 +139,17 @@ const AcceptedCompanies = () => {
 		setCustomModalDetails({
 			success: response.success,
 			message: response.message,
-		});		
-	}
-
+		});
+	};
 
 	return (
 		<>
-			<section className="  py-20 bg-blue-100 ">
+			<section className=" min-h-screen py-20 bg-blue-100 ">
 				<div className=" mx-auto  max-w-7xl bg-white shadow px-8 pb-8 pt-10 relative rounded-xl ">
-					<div onClick={() => navigate("/state-coordinator/home")}  className=" absolute left-8 top-8 text-gray-500 cursor-pointer">
+					<div
+						onClick={() => navigate("/state-coordinator/home")}
+						className=" absolute left-8 top-8 text-gray-500 cursor-pointer"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							class="h-8 w-8 transform rotate-180"
@@ -169,18 +175,19 @@ const AcceptedCompanies = () => {
 							{user.state} : Accepted Companies
 						</h2>
 
-						<div className=" flex justify-between items-center mt-8">
+						<div className=" flex flex-col md:flex-row space-y-2 justify-between items-center mt-8">
 							<div className=" w-80 space-y-2 ">
 								<span className="">Select Lga</span>
 								<CustomDropDown
 									name="localGovernment"
 									data={NigerianStates.filter(
 										(s) => s.state === user.state
-									)[0].lgas.sort((a,b) => {
-										let nameA;
+									)[0]
+										.lgas.sort((a, b) => {
+											let nameA;
 											let nameB;
-												nameA = a.toUpperCase() // ignore upper and lowercase
-												nameB = b.toUpperCase() // ignore upper and lowercase
+											nameA = a.toUpperCase(); // ignore upper and lowercase
+											nameB = b.toUpperCase(); // ignore upper and lowercase
 											if (nameA < nameB) {
 												return -1;
 											}
@@ -189,11 +196,12 @@ const AcceptedCompanies = () => {
 											}
 											// names must be equal
 											return 0;
-									}).map((lga) => ({
-										name: lga,
-										value: lga,
-									}))}
-									value = {selectedLga}
+										})
+										.map((lga) => ({
+											name: lga,
+											value: lga,
+										}))}
+									value={selectedLga}
 									onSelect={onSelect}
 									placeholder="Select Local Government"
 								/>
@@ -219,104 +227,111 @@ const AcceptedCompanies = () => {
 							Relationship Managers
 						</h2>
 
-						<table className=" mt-10 min-w-full text rounded  shadow-md">
-							<thead className="border-b-1 border-blue-600 bg-blue-400 text-left ">
-								<tr className="">
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
-									>
-										full Name
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
-									>
-										email
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									>
-										number
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									>
-										lga
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-2/12"
-									>
-										address
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									>
-										priority
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									></th>
-								</tr>
-							</thead>
-							<tbody className=" text-gray-700 text-sm">
-								{clusterManagers
-									.filter(
-										(manager) =>
-											manager.localGovernment ==
-												selectedLga &&
-											manager.isAccepted
-									)
-									.map((m, index) => (
-										<tr
-											key={index}
-											className=" align-middle "
+						<div className="mt-10 overflow-x-auto mb-1">
+							<table
+								style={{ minWidth: "1200px" }}
+								className="  min-w-full text rounded  shadow-md"
+							>
+								<thead className="border-b-1 border-blue-600 bg-blue-400 text-left ">
+									<tr className="">
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
 										>
-											<td className="px-6 py-3">
-												{m.fullName}
-											</td>
-											<td className="px-6 py-3">
-												{m.email}
-											</td>
-											<td className="px-6 py-3">
-												{m.phoneNum}
-											</td>
-											<td className="px-6 py-3">
-												{m.localGovernment}
-											</td>
-											<td className="px-6 py-3">
-												{m.address}
-											</td>
-											<td className="">
-												<CustomDropDown
-													name = {m._id}
-													data = {Priorities}
-													placeholder = "Select"
-													onSelect = {onSelectClusterManagerPriority}
-													value = {m.priority}
-												/>
-											</td>
-											<td className="px-6 py-3 text-center">
-												<button
-													onClick={() => {
-														onClickRejectClusterManager(
-															m
-														);
-													}}
-													className=" px-3 py-1 text-sm rounded bg-red-600 shadow-sm text-white"
-												>
-													Reject
-												</button>
-											</td>
-										</tr>
-									))}
-							</tbody>
-						</table>
+											full Name
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
+										>
+											email
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										>
+											number
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										>
+											lga
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-2/12"
+										>
+											address
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										>
+											priority
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										></th>
+									</tr>
+								</thead>
+								<tbody className=" text-gray-700 text-sm">
+									{clusterManagers
+										.filter(
+											(manager) =>
+												manager.localGovernment ==
+													selectedLga &&
+												manager.isAccepted
+										)
+										.map((m, index) => (
+											<tr
+												key={index}
+												className=" align-middle "
+											>
+												<td className="px-6 py-3">
+													{m.fullName}
+												</td>
+												<td className="px-6 py-3">
+													{m.email}
+												</td>
+												<td className="px-6 py-3">
+													{m.phoneNum}
+												</td>
+												<td className="px-6 py-3">
+													{m.localGovernment}
+												</td>
+												<td className="px-6 py-3">
+													{m.address}
+												</td>
+												<td className="">
+													<CustomDropDown
+														name={m._id}
+														data={Priorities}
+														placeholder="Select"
+														onSelect={
+															onSelectClusterManagerPriority
+														}
+														value={m.priority}
+													/>
+												</td>
+												<td className="px-6 py-3 text-center">
+													<button
+														onClick={() => {
+															onClickRejectClusterManager(
+																m
+															);
+														}}
+														className=" px-3 py-1 text-sm rounded bg-red-600 shadow-sm text-white"
+													>
+														Reject
+													</button>
+												</td>
+											</tr>
+										))}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 
@@ -327,104 +342,108 @@ const AcceptedCompanies = () => {
 							Logistic Companies
 						</h2>
 
-						<table className=" mt-10 min-w-full text rounded  shadow-md">
-							<thead className="border-b-1 border-blue-600 bg-blue-400 text-left ">
-								<tr className="">
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
-									>
-										full Name
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
-									>
-										email
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									>
-										number
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									>
-										lga
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-2/12"
-									>
-										address
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									>
-										priority
-									</th>
-									<th
-										scope="col"
-										className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-									></th>
-								</tr>
-							</thead>
-							<tbody className=" text-gray-700 text-sm">
-								{logisticCompanies
-									.filter(
-										(logisticCompany) =>
-											logisticCompany.localGovernment ==
-												selectedLga &&
-											logisticCompany.isAccepted
-									)
-									.map((l, index) => (
-										<tr
-											key={index}
-											className=" align-middle "
+						<div className="mt-10 pb-1 overflow-x-auto">
+							<table style={{ minWidth: "1200px" }} className=" min-w-full text rounded  shadow-md">
+								<thead className="border-b-1 border-blue-600 bg-blue-400 text-left ">
+									<tr className="">
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
 										>
-											<td className="px-6 py-3">
-												{l.fullName}
-											</td>
-											<td className="px-6 py-3">
-												{l.email}
-											</td>
-											<td className="px-6 py-3">
-												{l.phoneNum}
-											</td>
-											<td className="px-6 py-3">
-												{l.localGovernment}
-											</td>
-											<td className="px-6 py-3">
-												{l.address}
-											</td>
-											<td className="px-6 py-3">
-											<CustomDropDown
-													name = {l._id}
-													data = {Priorities}
-													placeholder = "Select"
-													onSelect = {onSelectLogisticsCompanyPriority}
-													value = {l.priority}
-												/>
-											</td>
-											<td className="px-6 py-3 text-center">
-												<button
-													onClick={() => {
-														onClickRejectLogisticsCompanies(
-															l
-														);
-													}}
-													className=" px-3 py-1 text-sm rounded bg-red-600 shadow-sm text-white"
-												>
-													Reject
-												</button>
-											</td>
-										</tr>
-									))}
-							</tbody>
-						</table>
+											full Name
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2 capitalize w-2/12"
+										>
+											email
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										>
+											number
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										>
+											lga
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-2/12"
+										>
+											address
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										>
+											priority
+										</th>
+										<th
+											scope="col"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+										></th>
+									</tr>
+								</thead>
+								<tbody className=" text-gray-700 text-sm">
+									{logisticCompanies
+										.filter(
+											(logisticCompany) =>
+												logisticCompany.localGovernment ==
+													selectedLga &&
+												logisticCompany.isAccepted
+										)
+										.map((l, index) => (
+											<tr
+												key={index}
+												className=" align-middle "
+											>
+												<td className="px-6 py-3">
+													{l.fullName}
+												</td>
+												<td className="px-6 py-3">
+													{l.email}
+												</td>
+												<td className="px-6 py-3">
+													{l.phoneNum}
+												</td>
+												<td className="px-6 py-3">
+													{l.localGovernment}
+												</td>
+												<td className="px-6 py-3">
+													{l.address}
+												</td>
+												<td className="px-6 py-3">
+													<CustomDropDown
+														name={l._id}
+														data={Priorities}
+														placeholder="Select"
+														onSelect={
+															onSelectLogisticsCompanyPriority
+														}
+														value={l.priority}
+													/>
+												</td>
+												<td className="px-6 py-3 text-center">
+													<button
+														onClick={() => {
+															onClickRejectLogisticsCompanies(
+																l
+															);
+														}}
+														className=" px-3 py-1 text-sm rounded bg-red-600 shadow-sm text-white"
+													>
+														Reject
+													</button>
+												</td>
+											</tr>
+										))}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</section>

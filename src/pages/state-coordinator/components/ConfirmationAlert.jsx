@@ -6,7 +6,7 @@ const ConfirmationAlert = (props) => {
 		<>
 			{completed ? (
 				<div className=" h-12 w-96 rounded bg-green-400 flex items-center justify-between px-4">
-					<div className=" w-60 space-x-2 flex items-center ">
+					<div className=" space-x-2 flex items-center ">
 						<div className=" h-8 w-8 flex-shrink-0 rounded-full bg-white flex justify-center items-center text-green-600">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ const ConfirmationAlert = (props) => {
 					
 				</div>
 			) : (
-				<div className=" h-12 w-96 rounded bg-red-400 flex items-center justify-between px-4">
+				<div className=" h-12 w-full  md:w-96 rounded bg-red-400 flex items-center justify-between px-4">
 					<div className=" w-60 space-x-2 flex items-center ">
 						<div className=" h-8 w-8 flex-shrink-0 rounded-full bg-white flex justify-center items-center text-red-600">
 							<svg

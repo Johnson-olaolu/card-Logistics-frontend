@@ -6,7 +6,7 @@ const Homepage = () => {
     const navigate = useNavigate()
 	const { user } = useSelector((state) => state.user);
 	return (
-		<section className="  py-20 bg-blue-100 min-h-screen ">
+		<section className="  py-20 bg-blue-100 min-h-screen p-4">
 			<div className=" mx-auto   max-w-7xl bg-white shadow px-8 pb-8 pt-10 relative rounded-xl ">
 				<img
 					src={require("../../assets/logo.svg").default}
@@ -18,14 +18,14 @@ const Homepage = () => {
 						{`${user.fullName} : ${user.state}`}
 					</h2>
 
-                    <div className=" mt-4 flex justify-between text-lg text-gray-600">
+                    <div className=" mt-4 flex flex-col  md:flex-row justify-between text-lg text-gray-600">
                         <p className=""> Phone Number : {user.phoneNum}</p>   
                         <p className="">Email : {user.email}</p>
                     </div>
 				</div>
 			</div>
 
-			<div  className=" grid grid-cols-2 mx-auto   max-w-7xl mt-16 justify-items-center ">
+			<div  className=" grid grid-cols-1 gap-y-10 md:grid-cols-2 mx-auto   max-w-7xl mt-16 justify-items-center ">
 				<div onClick={ () => {navigate("/state-coordinator/registered-companies")}} className=" w-80 h-96 bg-white rounded-xl shadow-md px-4 py-10 text-center hover:shadow-xl cursor-pointer">
 					<div className=" w-40 h-40 flex justify-center items-center rounded-full bg-blue-400 mx-auto text-white">
 						<svg

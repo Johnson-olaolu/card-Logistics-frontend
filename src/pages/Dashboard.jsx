@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 const Dashboard = () => {
     const navigate = useNavigate()
 	return (
-		<section className="  py-20 bg-blue-100 min-h-screen ">
+		<section className="  py-20 bg-blue-100 min-h-screen p-4">
 			<div className=" mx-auto   max-w-7xl bg-white shadow px-8 pb-8 pt-10 relative rounded-xl ">
 				<img
 					src={require("../assets/logo.svg").default}
@@ -19,7 +19,7 @@ const Dashboard = () => {
 				</div>
 			</div>
 
-			<div  className=" grid grid-cols-2 mx-auto   max-w-7xl mt-16 justify-items-center ">
+			<div  className=" grid grid-cols-1 gap-y-10 md:grid-cols-2 mx-auto   max-w-7xl mt-16 justify-items-center ">
 				<div onClick={ () => {navigate("/login")}} className=" w-80 h-96 bg-white rounded-xl shadow-md px-4 py-10 text-center hover:shadow-xl cursor-pointer">
 					<div className=" w-40 h-40 flex justify-center items-center rounded-full bg-blue-400 mx-auto text-white">
 						<svg

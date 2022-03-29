@@ -8,7 +8,7 @@ const ConfirmationErrorModal = (props) => {
 	} = props;
 	return (
 		<section className=" fixed h-screen w-screen top-0 left-0 bg-blue-100 bg-opacity-50 flex justify-center items-center">
-			<div className=" w-96 bg-white px-5 py-8 rounded-xl shadow text-center">
+			<div className=" max-w-sm bg-white px-5 py-8 rounded-xl shadow text-center">
 				<div className="h-12 w-12 rounded-full bg-red-600 mx-auto text-white flex justify-center items-center">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
