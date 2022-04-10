@@ -15,6 +15,10 @@ const RegisteredCompanies = () => {
 	const [logisticCompanies, setLogisticCompanies] = useState([]);
 	const [clusterManagers, setClusterManagers] = useState([]);
 
+	//view by localGovernment
+	const [viewLogisticsCompany, setViewLogisticsCompany] = useState([]);
+	const [viewClusterManager, setViewClusterManager] = useState([]);
+
 	const { user } = useSelector((state) => state.user);
 
 	//completed Lga
@@ -74,8 +78,24 @@ const RegisteredCompanies = () => {
 		getCompanies(user?.state);
 	}, [user]);
 
+	useEffect(() => {
+		setViewClusterManager(clusterManagers);
+		setViewLogisticsCompany(logisticCompanies);
+	}, []);
+
 	const onSelect = (name, value) => {
 		setSelectedLga(value);
+		if (value !== "") {
+			setViewClusterManager(
+				clusterManagers.filter((m) => m.localGovernment == value)
+			);
+			setViewLogisticsCompany(
+				logisticCompanies.filter((l) => l.localGovernment == value)
+			);
+		} else {
+			setViewClusterManager(clusterManagers);
+			setViewLogisticsCompany(logisticCompanies);
+		}
 	};
 
 	const onClickAcceptClusterManager = async (company) => {
@@ -233,12 +253,10 @@ const RegisteredCompanies = () => {
 									</tr>
 								</thead>
 								<tbody className=" text-gray-700 text-sm">
-									{clusterManagers
+									{viewClusterManager
 										.filter(
 											(manager) =>
-												manager.localGovernment ==
-													selectedLga &&
-												!manager.isAccepted
+												manager.isAccepted === false
 										)
 										.map((m, index) => (
 											<tr
@@ -331,12 +349,10 @@ const RegisteredCompanies = () => {
 									</tr>
 								</thead>
 								<tbody className=" text-gray-700 text-sm">
-									{logisticCompanies
+									{viewLogisticsCompany
 										.filter(
-											(logisticCompany) =>
-												logisticCompany.localGovernment ==
-													selectedLga &&
-												!logisticCompany.isAccepted
+											(company) =>
+												company.isAccepted === false
 										)
 										.map((l, index) => (
 											<tr

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 
 const StyledCustomDropDown = styled.div`
@@ -71,6 +71,7 @@ const StyledCustomDropDown = styled.div`
 const CustomDropDown = (props) => {
 	const { data , onSelect, name , value , placeholder} = props
 	const [showDropdown, setShowDropdown] = useState(false);
+	const [showValue, setShowValue] = useState(value)
 	const [selected, setSelected] = useState({
 		name : "",
 		value : ""
@@ -80,6 +81,13 @@ const CustomDropDown = (props) => {
 		setSelected(selectedItem)
 		setShowDropdown(false)
 		onSelect(name, selectedItem.value)
+	}
+
+	
+
+	const onClickPlaceholder = () => {
+		onSelect(name, "")
+		setShowDropdown(false)
 	}
 
 	return (
@@ -105,7 +113,7 @@ const CustomDropDown = (props) => {
 				<>
 					<div className="section-2">
 						<ul className="">
-							<span className="">{placeholder}</span>
+							<span onClick={ onClickPlaceholder} className="">{placeholder}</span>
 							{data?.map((datapoint, index) => (
 								<li key={index} onClick={ () => {onChange(datapoint)}} className=""> {datapoint.name}</li>
 							))}

@@ -29,7 +29,7 @@ const ConfirmationErrorModal = (props) => {
 				<div className=" mt-5">
 					<h6 className="text-red-600 text-xl">Warning : There are no Selected companies for these Lgas</h6>
 					<div className=" mt-4">
-						<h4 className="">Cluster Managers :</h4>
+						<h4 className="">Relationship Managers :</h4>
 						<p className=" text-gray-600 text-sm">
 							{unCompletedClusterManagersLgas.map((l) => (
 								<span key={l} className="">

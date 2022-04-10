@@ -15,6 +15,10 @@ const AcceptedCompanies = () => {
 	const [logisticCompanies, setLogisticCompanies] = useState([]);
 	const [clusterManagers, setClusterManagers] = useState([]);
 
+	//view by localGovernment
+	const [viewLogisticsCompany, setViewLogisticsCompany] = useState([]);
+	const [viewClusterManager, setViewClusterManager] = useState([]);
+
 	const { user } = useSelector((state) => state.user);
 
 	//completed Lga
@@ -30,9 +34,8 @@ const AcceptedCompanies = () => {
 			query
 		);
 		if (response.success) {
-			setLogisticCompanies(response.data.logisticCompanies);
-			setClusterManagers(response.data.clusterManagers);
-
+			await setLogisticCompanies(response.data.logisticCompanies);
+			await setClusterManagers(response.data.clusterManagers);
 			setUnCompletedClusterManagersLgas(
 				NigerianStates.filter(
 					(state) => state.state == query
@@ -62,14 +65,32 @@ const AcceptedCompanies = () => {
 				message: response.message,
 			});
 		}
+
+		if(selectedLga !== "") {
+			setViewClusterManager(clusterManagers.filter(m => m.localGovernment == selectedLga))
+			setViewLogisticsCompany(logisticCompanies.filter(l => l.localGovernment == selectedLga))
+		}else {
+			setViewClusterManager(clusterManagers)
+			setViewLogisticsCompany(logisticCompanies)
+		}
 	}
 	useEffect(() => {
 		getCompanies(user?.state);
 	}, []);
 
+
 	const onSelect = (name, value) => {
 		setSelectedLga(value);
+		if(value !== "") {
+			setViewClusterManager(clusterManagers.filter(m => m.localGovernment == value))
+			setViewLogisticsCompany(logisticCompanies.filter(l => l.localGovernment == value))
+		}else {
+			setViewClusterManager(clusterManagers)
+			setViewLogisticsCompany(logisticCompanies)
+		}
 	};
+
+	
 
 	const onClickRejectClusterManager = async (company) => {
 		const response = await stateCoordinatorSevice.rejectClusterManager(
@@ -142,6 +163,44 @@ const AcceptedCompanies = () => {
 		});
 	};
 
+	const onSelectMapLogisticsManager = async (name, value) => {
+		const payload = {
+			logisticCompanyId: name,
+			clusterManagerId: value,
+		};
+
+		const response = await stateCoordinatorSevice.mapLogisticsCompany(
+			payload
+		);
+
+		getCompanies(user?.state);
+		//show custom modal
+		setShowCustomModal(true);
+		setCustomModalDetails({
+			success: response.success,
+			message: response.message,
+		});
+	};
+
+	const onSelectMapClusterManager = async (name, value) => {
+		const payload = {
+			logisticCompanyId: value,
+			clusterManagerId: name,
+		};
+
+		const response = await stateCoordinatorSevice.mapClusterManager(
+			payload
+		);
+
+		getCompanies(user?.state);
+		//show custom modal
+		setShowCustomModal(true);
+		setCustomModalDetails({
+			success: response.success,
+			message: response.message,
+		});
+	};
+
 	return (
 		<>
 			<section className=" min-h-screen py-20 bg-blue-100 ">
@@ -173,6 +232,10 @@ const AcceptedCompanies = () => {
 					<div className="">
 						<h2 className=" text-center font-medium text-4xl text-gray-800">
 							{user.state} : Accepted Companies
+							<p className="text-xl">
+								Map your Relatioship Managers to a logistic
+								companies
+							</p>
 						</h2>
 
 						<div className=" flex flex-col md:flex-row space-y-2 justify-between items-center mt-8">
@@ -221,13 +284,13 @@ const AcceptedCompanies = () => {
 				</div>
 
 				{/* cluster manager */}
-				<div className=" mx-auto  max-w-7xl bg-white shadow p-8 mt-10 relative rounded-xl ">
+				<div className=" mx-auto  max-w-max bg-white shadow p-8 mt-10 relative rounded-xl ">
 					<div className="">
 						<h2 className=" font-medium text-2xl text-gray-800">
 							Relationship Managers
 						</h2>
 
-						<div className="mt-10 overflow-x-auto mb-1">
+						<div className="mt-10  mb-1">
 							<table
 								style={{ minWidth: "1200px" }}
 								className="  min-w-full text rounded  shadow-md"
@@ -266,9 +329,9 @@ const AcceptedCompanies = () => {
 										</th>
 										<th
 											scope="col"
-											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
+											className="text-sm font-medium text-white px-6 py-2  capitalize w-2/12"
 										>
-											priority
+											LC
 										</th>
 										<th
 											scope="col"
@@ -277,12 +340,9 @@ const AcceptedCompanies = () => {
 									</tr>
 								</thead>
 								<tbody className=" text-gray-700 text-sm">
-									{clusterManagers
+									{viewClusterManager
 										.filter(
-											(manager) =>
-												manager.localGovernment ==
-													selectedLga &&
-												manager.isAccepted
+											manager  => manager.isAccepted === true
 										)
 										.map((m, index) => (
 											<tr
@@ -304,15 +364,31 @@ const AcceptedCompanies = () => {
 												<td className="px-6 py-3">
 													{m.address}
 												</td>
-												<td className="">
+												<td className="px-6 py-3">
 													<CustomDropDown
 														name={m._id}
-														data={Priorities}
+														data={logisticCompanies
+															.filter(
+																(company) =>
+																	company.localGovernment ===
+																		selectedLga &&
+																	company.isAccepted
+															)
+															.map((l) => ({
+																name: l.fullName,
+																value: l._id,
+															}))}
 														placeholder="Select"
 														onSelect={
-															onSelectClusterManagerPriority
+															onSelectMapClusterManager
 														}
-														value={m.priority}
+														value={
+															logisticCompanies.filter(
+																(l) =>
+																	l._id ==
+																	m.logisticsCompany
+															)[0]?.fullName
+														}
 													/>
 												</td>
 												<td className="px-6 py-3 text-center">
@@ -336,14 +412,17 @@ const AcceptedCompanies = () => {
 				</div>
 
 				{/* logisticCompanies */}
-				<div className=" mx-auto  max-w-7xl bg-white shadow p-8 mt-10 relative rounded-xl ">
+				<div className=" mx-auto max-w-7xl bg-white shadow p-8 mt-10 relative rounded-xl ">
 					<div className="">
 						<h2 className=" font-medium text-2xl text-gray-800">
 							Logistic Companies
 						</h2>
 
-						<div className="mt-10 pb-1 overflow-x-auto">
-							<table style={{ minWidth: "1200px" }} className=" min-w-full text rounded  shadow-md">
+						<div className="mt-10 pb-1 overflox-x-auto">
+							<table
+								style={{ minWidth: "1024px" }}
+								className=" min-w-full text rounded  shadow-md"
+							>
 								<thead className="border-b-1 border-blue-600 bg-blue-400 text-left ">
 									<tr className="">
 										<th
@@ -376,12 +455,7 @@ const AcceptedCompanies = () => {
 										>
 											address
 										</th>
-										<th
-											scope="col"
-											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
-										>
-											priority
-										</th>
+
 										<th
 											scope="col"
 											className="text-sm font-medium text-white px-6 py-2  capitalize w-1/12"
@@ -389,43 +463,29 @@ const AcceptedCompanies = () => {
 									</tr>
 								</thead>
 								<tbody className=" text-gray-700 text-sm">
-									{logisticCompanies
-										.filter(
-											(logisticCompany) =>
-												logisticCompany.localGovernment ==
-													selectedLga &&
-												logisticCompany.isAccepted
-										)
+									{viewLogisticsCompany
+									.filter(
+										company  => company.isAccepted === true
+									)
 										.map((l, index) => (
 											<tr
 												key={index}
 												className=" align-middle "
 											>
-												<td className="px-6 py-3">
+												<td className="pl-6 py-3">
 													{l.fullName}
 												</td>
-												<td className="px-6 py-3">
+												<td className="pl-6 py-3">
 													{l.email}
 												</td>
-												<td className="px-6 py-3">
+												<td className="pl-6 py-3">
 													{l.phoneNum}
 												</td>
-												<td className="px-6 py-3">
+												<td className="pl-6 py-3">
 													{l.localGovernment}
 												</td>
-												<td className="px-6 py-3">
+												<td className="pl-6 py-3">
 													{l.address}
-												</td>
-												<td className="px-6 py-3">
-													<CustomDropDown
-														name={l._id}
-														data={Priorities}
-														placeholder="Select"
-														onSelect={
-															onSelectLogisticsCompanyPriority
-														}
-														value={l.priority}
-													/>
 												</td>
 												<td className="px-6 py-3 text-center">
 													<button

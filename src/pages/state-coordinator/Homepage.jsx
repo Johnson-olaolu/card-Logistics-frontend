@@ -44,7 +44,7 @@ const Homepage = () => {
 						</svg>
 					</div>
 					<h2 className="text-2xl mt-20 text-blue-400">
-						View RM's amd Logistics Companies{" "}
+						View RM's and Logistics Companies{" "}
 					</h2>
 				</div>
 
@@ -66,7 +66,7 @@ const Homepage = () => {
 						</svg>
 					</div>
 					<h2 className="text-2xl mt-20 text-blue-400">
-						View Accepted Rm's and Logistics Companies{" "}
+						View Accepted RM's and Logistics Companies{" "}
 					</h2>
 				</div>
 			</div>

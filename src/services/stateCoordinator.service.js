@@ -77,6 +77,33 @@ const changeLogisticsCompanyPriority = async (payload) => {
         })
 }
 
+const mapLogisticsCompany = async (payload) =>{
+    const {logisticCompanyId, clusterManagerId} = payload
+    return await axiosService.put(`/coordinator/map-logistics-company/${logisticCompanyId}`, {
+        clusterManagerId
+    })
+        .then(res => {
+            return res.data
+        })
+        .catch(error => {
+            return(error.response.data.message)
+        })
+}
+
+const mapClusterManager = async (payload) =>{
+    const {logisticCompanyId, clusterManagerId} = payload
+    return await axiosService.put(`/coordinator/map-cluster-manager/${clusterManagerId}`, {
+        logisticsCompanyId : logisticCompanyId
+    })
+        .then(res => {
+            return res.data
+        })
+        .catch(error => {
+            return(error.response.data.message)
+        })
+}
+
+
 export const stateCoordinatorSevice = {
     getAllCompaniesByState,
     acceptClusterManager,
@@ -84,5 +111,7 @@ export const stateCoordinatorSevice = {
     rejectClusterManager,
     rejectLogisticCompany,
     changeClusterManagerPriority,
-    changeLogisticsCompanyPriority
+    changeLogisticsCompanyPriority,
+    mapLogisticsCompany,
+    mapClusterManager
 }

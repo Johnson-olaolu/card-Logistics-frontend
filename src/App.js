@@ -11,6 +11,8 @@ import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
 import Homepage from "./pages/state-coordinator/Homepage";
 import Dashboard from "./pages/Dashboard";
+import CompanyLogin from "./pages/company/companyLogin";
+import ViewStatus from "./pages/company/viewStatus";
 
 let persistor = persistStore(store);
 
@@ -28,6 +30,10 @@ function App() {
 								path="/registration-form"
 								element={<RegistrationForm />}
 							/>
+							<Route path = "/company" >
+								<Route path = "login" element = {<CompanyLogin/>} />
+								<Route path = "view-status" element = {<ViewStatus/>}/>
+							</Route>
 							<Route path="/state-coordinator">
 								<Route
 									path="home"
